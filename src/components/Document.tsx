@@ -39,21 +39,21 @@ const Document: React.FC<DocumentProps> = ({ id }) => {
         }, []);
 
         return (
-            <div style={{ color: '#3c4043' }}>
+            <div>
                 <h2>{textData[id].title}</h2>
-                {textData[id].text.split(' ').map((word, index) => {
-                    let color = '#3c4043';
-                    if (text.split(' ')[index]) {
-                        if (text.split(' ')[index] === word) {
-                            color = '#fff';
+                {textData[id].text.split('').map((word, index) => {
+                    let color = '#bbb';
+                    if (text.split('')[index]) {
+                        if (text.split('')[index] === word) {
+                            color = '#000';
                         } else {
                             color = 'red';
                         }
                     }
 
                     return (
-                        <span key={index} style={{ backgroundColor: color }}>
-        {word}{' '}
+                        <span key={index} style={{ color: color }}>
+        {word}{''}
       </span>
                     );
                 })}
