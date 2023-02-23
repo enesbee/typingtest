@@ -1,71 +1,71 @@
-import React, { useState, useEffect } from 'react';
+import React, {useEffect, useState} from 'react';
+import {useNavigate} from 'react-router-dom';
 
-type TypingPageProps = {
-    text: string;
-    onTypingFinish: (startTime: number, endTime: number, inputText: string) => void;
-};
+const TypingPage = () => {
+    const [text, setText] = useState("");
+    const [currentIndex, setCurrentIndex] = useState(0);
+    const [errorCount, setErrorCount] = useState(0);
+    const [startTime, setStartTime] = useState<string>('');
+    const [endTime, setEndTime] = useState<string>('');
+    const navigate = useNavigate();
 
-const TypingPage = ({ text, onTypingFinish }: TypingPageProps) => {
-    const [inputText, setInputText] = useState('');
-    const [startTime, setStartTime] = useState<number | null>(null);
-    const [endTime, setEndTime] = useState<number | null>(null);
+    const mockData = "Lorem ipsum dolor sit amet, consectetur adipiscing elit.";
 
     useEffect(() => {
-        if (inputText.length === 1) {
-            setStartTime(Date.now());
-        }
-        if (inputText === text) {
-            setEndTime(Date.now());
-        }
-    }, [inputText, text]);
+        document.addEventListener("keydown", handleKeyDown);
+        return () => {
+            document.removeEventListener("keydown", handleKeyDown);
+        };
+    }, [currentIndex]);
 
-    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setInputText(event.target.value);
-    };
-
-    const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
-        const keyPressed = event.key;
-        if (keyPressed === 'Shift') {
-            return;
-        }
-        if (keyPressed === 'Enter') {
-            if (inputText === text) {
-                onTypingFinish(startTime!, endTime!, inputText);
+    const handleKeyDown = (event: KeyboardEvent) => {
+        const { key } = event;
+        const currentChar = mockData[currentIndex];
+        // 이상한 키를 눌렀을 때
+        if (key !== currentChar) {
+            if (key === 'Enter') {
+                // 엔터 키 라면(결과페이지로 이동)
+                localStorage.setItem("startTime", startTime);
+                localStorage.setItem("endTime", endTime);
+                navigate('/result', {
+                    state: {
+                        dataLength: mockData.length
+                    }
+                });
+            } else {
+                //아니라면
+                let newErrorCount = errorCount + 1;
+                setErrorCount(newErrorCount);
             }
-            return;
+        } else {
+            let newIndex = currentIndex + 1;
+            setCurrentIndex(newIndex);
+            if (newIndex === 1) {
+                setStartTime(Date.now().toString());
+            }
+            if (newIndex === mockData.length) {
+                setEndTime(Date.now().toString());
+            }
         }
-        if (keyPressed === 'Backspace') {
-            setInputText(inputText.slice(0, -1));
-            return;
-        }
-        const expectedChar = text.charAt(inputText.length);
-        if (keyPressed === expectedChar) {
-            setInputText(inputText + keyPressed);
-        }
-    };
 
-    const getTypedCharColor = (index: number) => {
-        if (inputText.length > index) {
-            return inputText[index] === text[index] ? '#fff' : '#f44336';
-        }
-        return '#bbbbbb';
     };
 
     return (
-        <div className="container">
-            <div className="text">{text.split('').map((char, index) => (
-                <span key={index} style={{ color: getTypedCharColor(index), fontSize: '16px' }}>
-          {char}
-        </span>
-            ))}
+        <div>
+            <div style={{ fontSize: "14px" }}>
+                {mockData.split("").map((char, index) => (
+                    <span
+                        key={index}
+                        style={{
+                            color: index < currentIndex ? "#000000" : "#bbbbbb",
+                            fontSize: index === currentIndex ? "16px" : "14px",
+                            fontWeight: index === currentIndex ? "bold" : ""
+                        }}
+                    >
+            {char}
+          </span>
+                ))}
             </div>
-            <input
-                type="text"
-                value={inputText}
-                onChange={handleInputChange}
-                onKeyDown={handleKeyPress}
-                style={{ fontSize: '16px' }}
-            />
         </div>
     );
 };

@@ -1,54 +1,41 @@
-import { Link } from 'react-router-dom';
+import React, {useEffect, useState} from 'react';
+import {useLocation, useNavigate} from 'react-router-dom';
 
-interface Results {
-    wpm: number;
-    accuracy: number;
-    timeElapsed: number;
-}
+const ResultPage = () => {
+    const [wpm, setWpm] = useState<number | null>(null);
+    const [accuracy, setAccuracy] = useState<number | null>(null);
+    const [timeElapsed, setTimeElapsed] = useState<number | null>(null);
+    const navigate = useNavigate();
+    const location = useLocation();
 
-function ResultsPage() {
-    const wpm = localStorage.getItem('wpm');
-    const accuracy = localStorage.getItem('accuracy');
-    const timeElapsed = localStorage.getItem('timeElapsed');
-    const results: Results[] = JSON.parse(localStorage.getItem('results') || '[]');
+    useEffect(() => {
+        const startTimeString = localStorage.getItem("startTime");
+        const endTimeString = localStorage.getItem("endTime");
+        if (startTimeString && endTimeString) {
+            const startTime = parseInt(startTimeString);
+            const endTime = parseInt(endTimeString);
+            const timeElapsed = (endTime - startTime) / 1000;
+            setTimeElapsed(timeElapsed);
+            const wordCount = location.state.dataLength; // example value, should be calculated from mockData
+            const wpm = Math.round((wordCount / (timeElapsed / 60)) * 100) / 100;
+            setWpm(wpm);
+            const accuracy = 100; // example value, should be calculated based on user input
+            setAccuracy(accuracy);
+        }
+    }, []);
 
-    if (wpm && accuracy && timeElapsed) {
-        const newResult = {
-            wpm: parseFloat(wpm),
-            accuracy: parseFloat(accuracy),
-            timeElapsed: parseInt(timeElapsed),
-        };
-        localStorage.setItem('results', JSON.stringify([...results, newResult]));
-    }
+    const handleRestart = () => {
+        navigate("/");
+    };
 
     return (
         <div>
-            <h1>Results</h1>
-            {wpm && accuracy && timeElapsed ? (
-                <div>
-                    <p>Words Per Minute: {wpm}</p>
-                    <p>Accuracy: {accuracy}%</p>
-                    <p>Time Elapsed: {Math.round(+timeElapsed / 1000)} seconds</p>
-                </div>
-            ) : (
-                <p>No results to display.</p>
-            )}
-            <h2>Previous Results</h2>
-            {results.length > 0 ? (
-                <ul>
-                    {results.map((result, index) => (
-                        <li key={index}>
-                            WPM: {result.wpm} - Accuracy: {result.accuracy}% - Time Elapsed:{' '}
-                            {Math.round(result.timeElapsed / 1000)} seconds
-                        </li>
-                    ))}
-                </ul>
-            ) : (
-                <p>No previous results to display.</p>
-            )}
-            <Link to="/">Play Again</Link>
+            <div>분 당 글자수: {wpm?.toFixed(2)}타</div>
+            <div>정확도: {accuracy}%</div>
+            <div>소요 시간: {timeElapsed?.toFixed(1)}초</div>
+            <button onClick={handleRestart}>다시 도전!</button>
         </div>
     );
-}
+};
 
-export default ResultsPage;
+export default ResultPage;
