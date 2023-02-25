@@ -1,14 +1,17 @@
 import { Link } from 'react-router-dom';
+import {MainParagraph, MainSection, MainSectionInner, MainTitle, NextButton } from './styles/Start.style';
 
 function StartPage() {
     return (
-        <div>
-            <h1>JSTyping</h1>
-            <p>자바스크립트로 타자연습을 해봅시다.</p>
+        <MainSection>
+            <MainSectionInner>
+            <MainTitle>JSTyping</MainTitle>
+            <MainParagraph>자바스크립트로 타자연습을 해봅시다.</MainParagraph>
             <Link to="/typing">
-                <button style={{ fontSize: '20px', padding: '10px' }}>Game Start</button>
+                <NextButton>Game Start</NextButton>
             </Link>
-        </div>
+            </MainSectionInner>
+        </MainSection>
     );
 }
 

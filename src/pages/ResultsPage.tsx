@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {useLocation, useNavigate} from 'react-router-dom';
+import {NextButton, ResultBox, ResultsSection, ResultsSectionInner} from './styles/Results.style';
 
 const ResultPage = () => {
     const [wpm, setWpm] = useState<number | null>(null);
@@ -24,17 +25,26 @@ const ResultPage = () => {
         }
     }, []);
 
+    console.log(location.state)
     const handleRestart = () => {
         navigate("/");
     };
 
     return (
-        <div>
-            <div>분 당 글자수: {wpm?.toFixed(2)}타</div>
-            <div>정확도: {accuracy}%</div>
-            <div>소요 시간: {timeElapsed?.toFixed(1)}초</div>
-            <button onClick={handleRestart}>다시 도전!</button>
-        </div>
+        <ResultsSection>
+            <ResultsSectionInner>
+            {location.state == null ? <p>아직 기록이 없어요.</p> : (
+                <>
+                <ResultBox>
+                    <p>분 당 글자수: <span>{wpm?.toFixed(2)}</span>타</p>
+                    <p>정확도: <span>{accuracy}</span>%</p>
+                    <p>소요 시간: <span>{timeElapsed?.toFixed(1)}</span>초</p>
+                </ResultBox>
+                <NextButton onClick={handleRestart}>다시 도전!</NextButton>
+                </>
+            )}
+            </ResultsSectionInner>
+        </ResultsSection>
     );
 };
 

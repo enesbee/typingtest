@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {useNavigate} from 'react-router-dom';
+import {Keyword, TypingSection, TypingSectionInner } from './styles/Typing.style';
 
 const TypingPage = () => {
     const [text, setText] = useState("");
@@ -51,22 +52,53 @@ const TypingPage = () => {
     };
 
     return (
-        <div>
-            <div style={{ fontSize: "14px" }}>
+        <TypingSection>
+            <TypingSectionInner>
+            <div>
                 {mockData.split("").map((char, index) => (
-                    <span
+                    <Keyword
                         key={index}
-                        style={{
-                            color: index < currentIndex ? "#000000" : "#bbbbbb",
-                            fontSize: index === currentIndex ? "16px" : "14px",
-                            fontWeight: index === currentIndex ? "bold" : ""
-                        }}
+                        className={`${index < currentIndex ? 'isComplete' : '' } ${ index === currentIndex ? 'isActive' : ''}`}
                     >
             {char}
-          </span>
+          </Keyword>
                 ))}
             </div>
-        </div>
+            </TypingSectionInner>
+
+            <div className="window terminal ui-draggable ui-draggable-handle"
+                 style="position: relative; display: block; left: -375px; top: -233px;">
+                <div className="window__taskbar">
+                    <div className="window__taskbar--actions">
+                        <button className="close"></button>
+                        <button className="backfull"></button>
+                        <button className="full"></button>
+                    </div>
+                    <div className="window__taskbar--content">
+                        <h2>Terminal</h2>
+                    </div>
+                </div>
+                <div className="terminal_content">
+                    <p>Last Login : Yesterday on console</p>
+
+                    <!--    Oh My Zsh bash      -->
+                    <div className="terminal_line">
+                        <p>
+                            <span className="color_green">➜</span>&nbsp;&nbsp;
+                            <span className="color_blue">~</span>&nbsp;
+                            <span contentEditable="true" className="cursor"></span>
+                        </p>
+                    </div>
+
+                    <!--    MacOs Default bash                                 -->
+                    <!--          <div class="terminal_line">                            -->
+                    <!--            <p>MacBook-Pro:~ root$&nbsp;                         -->
+                    <!--              <span contenteditable="true" class="cursor"></span>-->
+                    <!--            </p>                                                 -->
+                    <!--          </div>                                                 -->
+                </div>
+            </div>
+        </TypingSection>
     );
 };
 

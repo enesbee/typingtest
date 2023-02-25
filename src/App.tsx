@@ -1,5 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import Footer from './components/Footer';
 import Header from './components/Header';
 import ResultPage from './pages/ResultsPage';
 import StartPage from './pages/StartPage';
@@ -14,9 +15,10 @@ function App() {
 				<Header />
 				<Routes>
 					<Route path='/' element={<StartPage />} />
-					<Route path='/typing' element={<TypingPage />} />
-					<Route path='/result' element={<ResultPage />} />
+					<Route path='typing' element={<TypingPage />} />
+					<Route path='result' element={<ResultPage />} />
 				</Routes>
+				<Footer />
 			</Router>
 		</>
 	);
