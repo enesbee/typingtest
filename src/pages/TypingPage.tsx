@@ -17,29 +17,94 @@ import {
 } from './styles/Typing.style';
 
 const TypingPage = () => {
-	const [text, setText] = useState('');
-	const [currentIndex, setCurrentIndex] = useState(0);
+	const [currentRowIndex, setCurrentRowIndex] = useState(0);
+	const [currentColIndex, setCurrentColIndex] = useState(0);
 	const [errorCount, setErrorCount] = useState(0);
 	const [startTime, setStartTime] = useState<string>('');
 	const [endTime, setEndTime] = useState<string>('');
 	const navigate = useNavigate();
 
-	const mockData = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.';
+	const mockData = [
+		`import React, { useState, useEffect, useRef } from 'react';`,
+		``,
+		`interface Props {`,
+		`  initialCount?: number;`,
+		`}`,
+		``,
+		`const Counter: React.FC<Props> = ({ initialCount = 0 }) => {`,
+		`  const [count, setCount] = useState<number>(initialCount);`,
+		`  const countRef = useRef<number>(count);`,
+		``,
+		`  useEffect(() => {`,
+		`    countRef.current = count;`,
+		`  }, [count]);`,
+		``,
+		`  useEffect(() => {`,
+		`    const timer = setInterval(() => {`,
+		`      setCount((prevCount) => prevCount + 1);`,
+		`    }, 1000);`,
+		``,
+		`    return () => {`,
+		`      clearInterval(timer);`,
+		`    };`,
+		`  }, []);`,
+		``,
+		`  return (`,
+		`    <div>`,
+		`      <p>Count: {count}</p>`,
+		`      <p>Previous Count: {countRef.current}</p>`,
+		`    </div>`,
+		`  );`,
+		`};`,
+		``,
+		`export default Counter;`
+	];
 
+
+	// 데이터의 줄 수
+	console.log(mockData.length)
+	// 데이터 한줄의 갯수
+console.log(mockData[currentRowIndex].length)
+	// mockdata 배열의 마지막 항목 숫자
+	console.log(mockData[mockData.length -1].length )
+	// 한줄 그게 몇줄까지 내려왓나
+	console.log(currentRowIndex)
 	useEffect(() => {
 		document.addEventListener('keydown', handleKeyDown);
 		return () => {
 			document.removeEventListener('keydown', handleKeyDown);
 		};
-	}, [currentIndex]);
+	}, [currentRowIndex, currentColIndex]);
 
 	const handleKeyDown = (event: KeyboardEvent) => {
 		const { key } = event;
-		const currentChar = mockData[currentIndex];
-		// 이상한 키를 눌렀을 때
-		if (key !== currentChar) {
-			if (key === 'Enter') {
-				// 엔터 키 라면(결과페이지로 이동)
+		const currentChar = mockData[currentRowIndex][currentColIndex];
+
+		// 현재 입력한 키가 정확하면
+		if (key === currentChar) {
+			setCurrentColIndex(currentColIndex + 1);
+
+			// 타이핑 시작 시간 저장
+			if (currentColIndex + 1 === 1) {
+				setStartTime(Date.now().toString());
+			}
+
+			// 모든 글자를 정확하게 입력하면 타이핑 종료 시간 저장
+			if (currentColIndex + 1 === mockData[currentRowIndex].length) {
+				setEndTime(Date.now().toString());
+			}
+		}
+
+		// 현재 입력한 키가 올바르지 않은 경우
+		else {
+			// 엔터 키가 아닌 경우에만 에러 카운트 증가
+			if (key !== 'Enter') {
+				setErrorCount(errorCount + 1);
+			}
+			// 엔터 키를 누르면
+			else if (mockData.length -1 === currentRowIndex && mockData[currentRowIndex].length === currentColIndex) {
+				// 모든 글자를 정확하게 입력한 경우에만 이동
+				// 타이핑 시작 시간과 종료 시간을 로컬 스토리지에 저장하고 결과 페이지로 이동
 				localStorage.setItem('startTime', startTime);
 				localStorage.setItem('endTime', endTime);
 				navigate('/result', {
@@ -47,20 +112,10 @@ const TypingPage = () => {
 						dataLength: mockData.length,
 					},
 				});
-			} else {
-				//아니라면
-				let newErrorCount = errorCount + 1;
-				setErrorCount(newErrorCount);
-			}
-		} else {
-			let newIndex = currentIndex + 1;
-			setCurrentIndex(newIndex);
-			if (newIndex === 1) {
-				setStartTime(Date.now().toString());
-			}
-			if (newIndex === mockData.length) {
-				setEndTime(Date.now().toString());
-			}
+			} else if (currentColIndex === mockData[currentRowIndex].length){
+				setCurrentRowIndex(currentRowIndex => currentRowIndex + 1);
+				setCurrentColIndex(0);
+			} else return;
 		}
 	};
 
@@ -100,15 +155,17 @@ const TypingPage = () => {
 									<span className='codicon codicon-close'></span>
 								</TypingEditorContentsTop>
 								<TypingEditor>
-                                        {mockData.split('').map((char, index) => (
-                                            <Keyword
-                                                key={index}
-                                                className={`${index < currentIndex ? 'isComplete' : ''} ${
-                                                    index === currentIndex ? 'isActive' : ''
-                                                }`}>
-                                                {char}
-                                            </Keyword>
-                                        ))}
+									{mockData.map((line:string, idx:number)=> (
+										<div key={idx} className={`${line.length === 0 ? 'isBlank' : ''}`}>
+											{line.split('').map((char, index) => (
+												<Keyword
+													key={index}
+													className={`${idx <= currentRowIndex && index < currentColIndex ? 'isComplete' : ''} ${idx < currentRowIndex?'isCompleted':''} ${idx === currentRowIndex && index=== currentColIndex ? 'isActive' : ''}`}>
+													{char}
+												</Keyword>
+											))}
+										</div>
+									))}
                                 </TypingEditor>
 							</TypingEditorContents>
 						</TypingEditorBox>

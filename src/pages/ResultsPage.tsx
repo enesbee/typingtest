@@ -37,7 +37,7 @@ const ResultPage = () => {
                 <>
                 <ResultBox>
                     <p>분 당 글자수: <span>{wpm?.toFixed(2)}</span>타</p>
-                    <p>정확도: <span>{accuracy}</span>%</p>
+                    {/*<p>정확도: <span>{accuracy}</span>%</p>*/}
                     <p>소요 시간: <span>{timeElapsed?.toFixed(1)}</span>초</p>
                 </ResultBox>
                 <NextButton onClick={handleRestart}>다시 도전!</NextButton>

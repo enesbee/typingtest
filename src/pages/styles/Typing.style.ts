@@ -18,12 +18,14 @@ export const Keyword = styled.span`
 	color: #bbb;
 	font-size: 16px;
 	font-weight: normal;
+  line-height:24px;
 
 	&.isActive {
 		font-size: 20px;
 		font-weight: bold;
 	}
-	&.isComplete {
+	&.isComplete,
+    &.isCompleted {
 		color: #888;
 	}
 `;
@@ -172,4 +174,10 @@ export const TypingEditorContentsTop = styled.div`
 export const TypingEditor = styled.div`
   width: 100%;
   margin:1rem 1rem 1rem 2rem;
+  white-space: pre;
+  overflow-y:auto;
+  
+  >div.isBlank {
+    height:20px;
+  }
 `;
