@@ -14,9 +14,9 @@ function App() {
 			<Router>
 				<Header />
 				<Routes>
-					<Route path='/' element={<StartPage />} />
-					<Route path='typing' element={<TypingPage />} />
-					<Route path='result' element={<ResultPage />} />
+					<Route path='/typingtest' element={<StartPage />} />
+					<Route path='/typingtest/typing' element={<TypingPage />} />
+					<Route path='/typingtest/result' element={<ResultPage />} />
 				</Routes>
 				<Footer />
 			</Router>
