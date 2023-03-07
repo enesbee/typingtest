@@ -101,7 +101,7 @@ const TypingPage = () => {
 				// 타이핑 시작 시간과 종료 시간을 로컬 스토리지에 저장하고 결과 페이지로 이동
 				localStorage.setItem('startTime', startTime);
 				localStorage.setItem('endTime', endTime);
-				navigate('/result', {
+				navigate('/typingtest/result', {
 					state: {
 						dataLength: mockData.length,
 					},
