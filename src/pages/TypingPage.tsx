@@ -57,18 +57,9 @@ const TypingPage = () => {
 		`  );`,
 		`};`,
 		``,
-		`export default Counter;`
+		`export default Counter;`,
 	];
 
-
-	// 데이터의 줄 수
-	console.log(mockData.length)
-	// 데이터 한줄의 갯수
-console.log(mockData[currentRowIndex].length)
-	// mockdata 배열의 마지막 항목 숫자
-	console.log(mockData[mockData.length -1].length )
-	// 한줄 그게 몇줄까지 내려왓나
-	console.log(currentRowIndex)
 	useEffect(() => {
 		document.addEventListener('keydown', handleKeyDown);
 		return () => {
@@ -102,7 +93,10 @@ console.log(mockData[currentRowIndex].length)
 				setErrorCount(errorCount + 1);
 			}
 			// 엔터 키를 누르면
-			else if (mockData.length -1 === currentRowIndex && mockData[currentRowIndex].length === currentColIndex) {
+			else if (
+				mockData.length - 1 === currentRowIndex &&
+				mockData[currentRowIndex].length === currentColIndex
+			) {
 				// 모든 글자를 정확하게 입력한 경우에만 이동
 				// 타이핑 시작 시간과 종료 시간을 로컬 스토리지에 저장하고 결과 페이지로 이동
 				localStorage.setItem('startTime', startTime);
@@ -112,8 +106,8 @@ console.log(mockData[currentRowIndex].length)
 						dataLength: mockData.length,
 					},
 				});
-			} else if (currentColIndex === mockData[currentRowIndex].length){
-				setCurrentRowIndex(currentRowIndex => currentRowIndex + 1);
+			} else if (currentColIndex === mockData[currentRowIndex].length) {
+				setCurrentRowIndex((currentRowIndex) => currentRowIndex + 1);
 				setCurrentColIndex(0);
 			} else return;
 		}
@@ -130,7 +124,7 @@ console.log(mockData[currentRowIndex].length)
 							<span></span>
 						</TypingBoxTaskBarButtons>
 						<TypingBoxTaskBarTitle>
-							<h2>Visual Studio Code</h2>
+							<h2>App.js - TypingTest - Visual Studio Code</h2>
 						</TypingBoxTaskBarTitle>
 					</TypingBoxTaskBar>
 					<TypingBoxContent>
@@ -155,18 +149,29 @@ console.log(mockData[currentRowIndex].length)
 									<span className='codicon codicon-close'></span>
 								</TypingEditorContentsTop>
 								<TypingEditor>
-									{mockData.map((line:string, idx:number)=> (
-										<div key={idx} className={`${line.length === 0 ? 'isBlank' : ''}`}>
+									{mockData.map((line: string, idx: number) => (
+										<div
+											key={idx}
+											className={`${line.length === 0 ? 'isBlank' : ''}`}>
+											{line.length === 0 && `↲`}
 											{line.split('').map((char, index) => (
 												<Keyword
 													key={index}
-													className={`${idx <= currentRowIndex && index < currentColIndex ? 'isComplete' : ''} ${idx < currentRowIndex?'isCompleted':''} ${idx === currentRowIndex && index=== currentColIndex ? 'isActive' : ''}`}>
+													className={`${
+														idx <= currentRowIndex && index < currentColIndex
+															? 'isComplete'
+															: ''
+													} ${idx < currentRowIndex ? 'isCompleted' : ''} ${
+														idx === currentRowIndex && index === currentColIndex
+															? 'isActive'
+															: ''
+													}`}>
 													{char}
 												</Keyword>
 											))}
 										</div>
 									))}
-                                </TypingEditor>
+								</TypingEditor>
 							</TypingEditorContents>
 						</TypingEditorBox>
 					</TypingBoxContent>

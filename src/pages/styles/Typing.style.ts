@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 
 export const TypingSection = styled.section`
 	display: flex;
@@ -14,31 +14,45 @@ export const TypingSectionInner = styled.div`
 	flex-direction: column;
 `;
 
+const flashCursor = keyframes`
+	0% {opacity:0}
+`;
 export const Keyword = styled.span`
 	color: #bbb;
 	font-size: 16px;
 	font-weight: normal;
-  line-height:24px;
+	line-height: 24px;
 
 	&.isActive {
-		font-size: 20px;
-		font-weight: bold;
+		font-size: 18px;
+		position: relative;
+		&:before {
+			content: '';
+			position: absolute;
+			top: 0;
+			left: -1px;
+			display: inline-block;
+			vertical-align: middle;
+			background-color: #fff;
+			width: 2px;
+			height: 22px;
+			animation: ${flashCursor} 1.5s steps(2) infinite;
+		}
 	}
 	&.isComplete,
-    &.isCompleted {
+	&.isCompleted {
 		color: #888;
 	}
 `;
 
 export const TypingBox = styled.div`
-	cursor: auto;
 	margin: 0;
 	padding: 0;
 	outline: 0;
 	list-style: none;
-	min-width: 50%;
+	min-width: 65%;
 	max-width: 80%;
-	min-height: 60vh;
+	max-height: 60vh;
 	overflow: hidden;
 	border-radius: 1rem;
 	background: transparent;
@@ -53,11 +67,11 @@ export const TypingBox = styled.div`
 `;
 
 export const TypingBoxTaskBar = styled.div`
-  height: 35px;
-  display: flex;
-  justify-content: space-between;
-  padding: 0 16px;
-  background-color: rgb(252, 255, 251);
+	height: 35px;
+	display: flex;
+	justify-content: space-between;
+	padding: 0 16px;
+	background-color: rgb(252, 255, 251);
 `;
 
 export const TypingBoxTaskBarButtons = styled.div`
@@ -98,6 +112,16 @@ export const TypingBoxTaskBarTitle = styled.div`
 	display: flex;
 	align-items: center;
 	justify-content: center;
+	padding: 0 20px;
+	overflow: hidden;
+
+	h2 {
+		line-height: 24px;
+		font-size: 16px;
+		overflow: hidden;
+		white-space: nowrap;
+		text-overflow: ellipsis;
+	}
 `;
 
 export const TypingBoxContent = styled.div`
@@ -111,73 +135,117 @@ export const TypingBoxContent = styled.div`
 `;
 
 export const TypingEditorBox = styled.div`
-  position: relative;
-  display: flex;
-  width:100%; height: 100%;
-  
+	position: relative;
+	display: flex;
+	width: 100%;
+	height: 100%;
 `;
 export const TypingEditorSplitView = styled.div`
-  width:48px; height:100%;
-  flex-shrink: 0;
-  background-color:rgb(51, 51, 51);
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  
-  > div:not(:first-child) {
-    display: flex;
-    flex-direction: column;
-    
-    &:nth-child(2) {margin-bottom:auto;}
+	width: 48px;
+	height: 100%;
+	flex-shrink: 0;
+	background-color: rgb(51, 51, 51);
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	transition: all 0.2s ease;
 
-    > div {
-      color:rgba(255, 255, 255, 0.4);
-      display: flex!important;
-      align-items: center;
-      justify-content: center;
-      box-sizing: border-box;
-      white-space: nowrap;
-      outline: 0;
-      font-size: 20px;
-      height:36px;
-    }
-  }
-  .codicon-menu {display:inherit; height:35px; font-size: 16px; justify-content:center; align-items: center}
+	@media screen and (max-width: 768px) {
+		& {
+			width: 0;
+		}
+	}
+
+	> div:not(:first-child) {
+		display: flex;
+		flex-direction: column;
+
+		&:nth-child(2) {
+			margin-bottom: auto;
+		}
+
+		> div {
+			color: rgba(255, 255, 255, 0.4);
+			display: flex !important;
+			align-items: center;
+			justify-content: center;
+			box-sizing: border-box;
+			white-space: nowrap;
+			outline: 0;
+			font-size: 20px;
+			height: 36px;
+		}
+	}
+	.codicon-menu {
+		display: inherit;
+		height: 35px;
+		font-size: 16px;
+		justify-content: center;
+		align-items: center;
+	}
 `;
 
 export const TypingEditorContents = styled.div`
-  flex-grow:1;
-  width:100%; height: 100%;
-  display: flex;
-  background-color: rgb(37, 37, 38);
-  flex-direction: column;
-  overflow-x: hidden;
+	flex-grow: 1;
+	width: 100%;
+	height: 100%;
+	display: flex;
+	background-color: rgb(37, 37, 38);
+	flex-direction: column;
 `;
 
 export const TypingEditorContentsTop = styled.div`
-  display: flex;
-  height:35px;
-  width: 120px;
-  min-width: fit-content;
-  flex-shrink: 0;
-  background-color: rgb(30, 30, 30);
-  justify-content: space-between;
-  
-  span {
-    display:inherit!important;
-    align-items: center;
-    min-width:16px; line-height: 16px;
-    margin:0 6px;
-    font-size:13px;
-  }
+	display: flex;
+	height: 35px;
+	width: 120px;
+	min-width: fit-content;
+	flex-shrink: 0;
+	background-color: rgb(30, 30, 30);
+	justify-content: space-between;
+
+	span {
+		display: inherit !important;
+		align-items: center;
+		min-width: 16px;
+		line-height: 16px;
+		margin: 0 6px;
+		font-size: 13px;
+	}
 `;
 export const TypingEditor = styled.div`
-  width: 100%;
-  margin:1rem 1rem 1rem 2rem;
-  white-space: pre;
-  overflow-y:auto;
-  
-  >div.isBlank {
-    height:20px;
-  }
+	width: 100%;
+	box-sizing: border-box;
+	padding: 1rem 1rem 1rem 2rem;
+	white-space: pre;
+	overflow-x: auto;
+	overflow-y: scroll;
+	/* ===== Scrollbar CSS ===== */
+	/* Firefox */
+	& {
+		scrollbar-width: auto;
+		scrollbar-color: ${(props) => props.theme.colors.dark}
+			${(props) => props.theme.colors.secondary};
+	}
+
+	/* Chrome, Edge, and Safari */
+	&::-webkit-scrollbar {
+		width: 7px;
+		height: 7px;
+	}
+
+	&::-webkit-scrollbar-track {
+		background: ${(props) => props.theme.colors.secondary};
+		border-radius: 5px;
+	}
+
+	&::-webkit-scrollbar-thumb {
+		background-color: ${(props) => props.theme.colors.dark};
+		border-radius: 5px;
+		border: 0px none transparent;
+	}
+
+	> div.isBlank {
+		height: 20px;
+		color: rgba(255, 255, 255, 0.2);
+	}
 `;
