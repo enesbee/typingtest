@@ -131,7 +131,6 @@ export const TypingBoxContent = styled.div`
 	background-color: rgba(5, 5, 99, 0.63);
 	backdrop-filter: blur(12px);
 	color: rgb(235, 235, 235);
-	font-family: 'D2Coding', sans-serif;
 `;
 
 export const TypingEditorBox = styled.div`
@@ -246,6 +245,7 @@ export const TypingEditor = styled.div`
 
 	> div.isBlank {
 		height: 20px;
+		font-size: 16px;
 		color: rgba(255, 255, 255, 0.2);
 	}
 `;
